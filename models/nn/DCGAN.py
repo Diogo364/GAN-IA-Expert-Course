@@ -5,8 +5,8 @@ import tensorflow as tf
 from tensorflow.keras import layers
 
 class DCGANGenerator(AbstractDLModel):
-    def __init__(self, optimizer: tf.keras.optimizers.Optimizer, input_shape: tuple=(100,)):
-        super().__init__(optimizer=optimizer, input_shape=input_shape)
+    def __init__(self, optimizer: tf.keras.optimizers.Optimizer, input_shape: tuple=(100,), from_path=None):
+        super().__init__(optimizer=optimizer, input_shape=input_shape, from_path=from_path)
 
     def _define_archtecture(self):
         return tf.keras.Sequential(layers=[
@@ -32,8 +32,8 @@ class DCGANGenerator(AbstractDLModel):
     
 
 class DCGANDiscriminator(AbstractDLModel):
-    def __init__(self, optimizer: tf.keras.optimizers.Optimizer, input_shape=(28, 28, 1)):
-        super().__init__(optimizer, input_shape)
+    def __init__(self, optimizer: tf.keras.optimizers.Optimizer, input_shape=(28, 28, 1), from_path=None):
+        super().__init__(optimizer, input_shape, from_path)
     
     def _define_archtecture(self):
         return tf.keras.Sequential(layers=[
