@@ -8,5 +8,6 @@ class DataLoaderInterface(ABC):
 
 
 class MNISTDataLoader(DataLoaderInterface):
-    def load_data(self):
+    @classmethod
+    def load_data(cls):
         return tf.keras.datasets.mnist.load_data()
