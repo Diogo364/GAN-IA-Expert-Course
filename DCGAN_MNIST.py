@@ -28,6 +28,7 @@ if __name__ == '__main__':
     buffer_size = batch_size * 3
     random_noise_size = 100
     epochs = 100
+    save_artefact_frequency = 5 # each n epochs
 
     dataset = get_mnist_data()
 
@@ -52,12 +53,13 @@ if __name__ == '__main__':
         for image_batch in tqdm(dataset, total=len(dataset), desc='Batches', leave=False):
             pipeline.train(image_batch)
         
-        test_output = generator.predict(test_images)
-        fig, axes = plt.subplots(4, 4, figsize=(20,20), facecolor='white')
-        for out_fig, ax in zip(test_output, axes.ravel()):
-            ax.imshow(out_fig, cmap='gray')
-            ax.axis('off')
-        fig.savefig(osp.join(OUTPATH, f'epoch_{epoch+1}_out_grid.png'))
-        plt.close(fig)
+        if epoch % (save_artefact_frequency-1) == 0:
+            test_output = generator.predict(test_images)
+            fig, axes = plt.subplots(4, 4, figsize=(20,20), facecolor='white')
+            for out_fig, ax in zip(test_output, axes.ravel()):
+                ax.imshow(out_fig, cmap='gray')
+                ax.axis('off')
+            fig.savefig(osp.join(OUTPATH, f'epoch_{epoch+1}_out_grid.png'))
+            plt.close(fig)
 
     pipeline._generator.save_model(DCGAN_ASSETS)
