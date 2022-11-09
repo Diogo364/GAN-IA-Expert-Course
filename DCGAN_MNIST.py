@@ -13,7 +13,7 @@ load_env()
 
 def get_mnist_data():
     (x_train, _), (_, _) = MNISTDataLoader.load_data()
-    x_train = np.expand_dims(normalize(x_train), axis=-1)
+    x_train = np.expand_dims(normalize(x_train, feature_range=(-1, 1)), axis=-1)
     return tf.data.Dataset.from_tensor_slices(x_train).shuffle(buffer_size=buffer_size).batch(batch_size=batch_size)
 
 if __name__ == '__main__':

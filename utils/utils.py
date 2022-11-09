@@ -1,11 +1,11 @@
 import numpy as np
+from sklearn.preprocessing import minmax_scale
 from dotenv import load_dotenv
 
-def normalize(data):
+def normalize(data, feature_range=(0, 1)):
+    input_shape = data.shape
     flatten_data = np.ravel(data)
-    max_value, min_value = flatten_data.max(), flatten_data.min()
-    middle = (max_value + min_value) / 2
-    return (data - middle) / middle
-
+    return minmax_scale(flatten_data, feature_range=feature_range).reshape(input_shape)
+    
 def load_env():
     load_dotenv('.env')
