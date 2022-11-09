@@ -11,3 +11,8 @@ class MNISTDataLoader(DataLoaderInterface):
     @classmethod
     def load_data(cls):
         return tf.keras.datasets.mnist.load_data()
+
+class FashionMNISTDataLoader(DataLoaderInterface):
+    @classmethod
+    def load_data(cls):
+        return tf.keras.datasets.fashion_mnist.load_data()
