@@ -1,13 +1,14 @@
 import os
 import os.path as osp
-import click
 import numpy as np
 from tqdm import tqdm
 import tensorflow as tf
 from utils import normalize, load_env
 import matplotlib.pyplot as plt
 from models.dataloaders import FashionMNISTDataLoader
-from models.nn import DCGANGenerator, DCGANDiscriminator, GANPipeline
+from models.nn.generator import DCGANGenerator
+from models.nn.discriminator import DCGANDiscriminator
+from models.nn.gan_pipeline import DCGANPipeline
 
 load_env()
 
@@ -43,7 +44,7 @@ if __name__ == '__main__':
     generator = DCGANGenerator(optimizer=generator_optimizer, input_shape=(random_noise_size,))
     discriminator = DCGANDiscriminator(optimizer=discriminator_optimizer)
 
-    pipeline = GANPipeline( generator, 
+    pipeline = DCGANPipeline(generator, 
                             discriminator, 
                             generator_loss, 
                             discriminator_loss)

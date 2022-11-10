@@ -41,3 +41,37 @@ class AbstractDLModel(ModelInterface,ABC):
     
     def load_model(self, path):
         return tf.keras.models.load_model(path)
+
+
+class GANPipelineInterface(ABC):
+    @abstractmethod
+    def _apply_discriminator_loss(self, expected_output, fake_output):
+        pass
+    
+    @abstractmethod
+    def _apply_generator_loss(self, fake_output):
+        pass    
+    
+    @abstractmethod
+    def train(self, images):
+        pass
+
+class AbstractGANPipeline(ABC):
+    def __init__(self, 
+                generator: AbstractDLModel, 
+                discriminator: AbstractDLModel, 
+                generator_loss: tf.keras.losses.Loss, 
+                discriminator_loss=tf.keras.losses.Loss):
+        self._generator = generator
+        self._generator_loss = generator_loss
+        
+        self._discriminator = discriminator
+        self._discriminator_loss = discriminator_loss
+
+    def _apply_discriminator_loss(self, expected_output, fake_output):
+        real_loss = self._discriminator_loss(tf.ones_like(expected_output), expected_output)
+        fake_loss = self._discriminator_loss(tf.zeros_like(fake_output), fake_output)
+        return real_loss + fake_loss
+    
+    def _apply_generator_loss(self, fake_output):
+        return self._generator_loss(tf.ones_like(fake_output), fake_output)
