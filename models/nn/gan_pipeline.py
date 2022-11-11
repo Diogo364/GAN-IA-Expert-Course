@@ -29,14 +29,14 @@ class WGAN_GPPipeline(AbstractGANPipeline):
                 generator_loss: tf.keras.losses.Loss, 
                 discriminator_loss=GradientPenaltyLossInterface,
                 discriminator_trains_per_epoch=3):
-        self.__discriminator_trains_per_epoch = discriminator_trains_per_epoch
+        self._discriminator_trains_per_epoch = discriminator_trains_per_epoch
         super().__init__(generator, discriminator, generator_loss, discriminator_loss)
 
     @tf.function
     def train(self, images):
         random_noise = tf.random.normal(np.ravel([[images.shape[0]], self._generator.get_input_shape()]))
         
-        for _ in range(self.__discriminator_trains_per_epoch):
+        for _ in range(self._discriminator_trains_per_epoch):
             with tf.GradientTape() as disc_tape:
                 generated_images = self._generator.predict(random_noise, training=True)
                 
