@@ -56,7 +56,7 @@ class GANPipelineInterface(ABC):
     def train(self, images):
         pass
 
-class AbstractGANPipeline(ABC):
+class AbstractGANPipeline(GANPipelineInterface, ABC):
     def __init__(self, 
                 generator: AbstractDLModel, 
                 discriminator: AbstractDLModel, 
