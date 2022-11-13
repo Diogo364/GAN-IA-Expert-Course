@@ -55,7 +55,7 @@ if __name__ == '__main__':
         for image_batch in tqdm(dataset, total=len(dataset), desc='Batches', leave=False):
             pipeline.train(image_batch)
         
-        if epoch % (save_artefact_frequency-1) == 0:
+        if (epoch == 0) or ((epoch+1) % save_artefact_frequency == 0):
             test_output = generator.predict(test_images)
             fig, axes = plt.subplots(4, 4, figsize=(20,20), facecolor='white')
             for out_fig, ax in zip(test_output, axes.ravel()):
