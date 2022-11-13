@@ -5,7 +5,7 @@ from utils import normalize
 import streamlit as st
 import tensorflow as tf
 from utils import load_env
-from models.nn import DCGANGenerator
+from models.nn.generator import DCGANGenerator
 
 load_env()
 def generate_random_input():
@@ -19,7 +19,7 @@ if __name__ == '__main__':
     selected_generator = st.selectbox('Select the Generator model', saved_generator)
 
     if selected_generator is not None:
-        full_path_generator = osp.join(os.environ['ASSETS'], selected_generator)
+        full_path_generator = osp.join(os.environ['ASSETS'], selected_generator, 'saved_model.hdf5')
         generator = DCGANGenerator(None, None, from_path=full_path_generator)
 
         button_clicked = st.button('Generate input')

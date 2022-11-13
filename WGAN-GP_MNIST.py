@@ -64,4 +64,4 @@ if __name__ == '__main__':
             fig.savefig(osp.join(OUTPATH, f'epoch_{epoch+1}_out_grid.png'))
             plt.close(fig)
 
-    pipeline._generator.save_model(WGAN_ASSETS)
+    pipeline._generator.save_model(osp.join(WGAN_ASSETS, 'saved_model.hdf5'))
