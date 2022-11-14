@@ -1,4 +1,6 @@
 from abc import ABC, abstractmethod
+from utils import remove_extension_names
+import os.path as osp
 import tensorflow as tf
 
 class DataLoaderInterface(ABC):
@@ -8,11 +10,9 @@ class DataLoaderInterface(ABC):
 
 
 class MNISTDataLoader(DataLoaderInterface):
-    @classmethod
-    def load_data(cls):
+    def load_data(self):
         return tf.keras.datasets.mnist.load_data()
 
 class FashionMNISTDataLoader(DataLoaderInterface):
-    @classmethod
-    def load_data(cls):
+    def load_data(self):
         return tf.keras.datasets.fashion_mnist.load_data()

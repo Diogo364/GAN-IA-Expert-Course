@@ -1,9 +1,8 @@
 import os
 import os.path as osp
-import numpy as np
 from tqdm import tqdm
 import tensorflow as tf
-from utils import normalize, load_env
+from utils import tf_normalize, load_env
 import matplotlib.pyplot as plt
 from models.dataloaders import FashionMNISTDataLoader
 from models.nn.generator import DCGANGenerator
@@ -14,9 +13,8 @@ from utils.custom_losses import WassersteinDiscriminatorLoss, WassersteinGenerat
 load_env()
 
 def get_mnist_data():
-    (x_train, _), (_, _) = FashionMNISTDataLoader.load_data()
-    x_train = np.expand_dims(normalize(x_train, feature_range=(-1, 1)), axis=-1)
-    return tf.data.Dataset.from_tensor_slices(x_train).shuffle(buffer_size=buffer_size).batch(batch_size=batch_size)
+    (x_train, _), (_, _) = FashionMNISTDataLoader().load_data()
+    return tf.data.Dataset.from_tensor_slices(x_train).map(lambda x: tf.expand_dims(tf_normalize(x), axis=-1)).shuffle(buffer_size=buffer_size).batch(batch_size=batch_size)
 
 if __name__ == '__main__':
     OUTPATH = osp.join(os.environ['OUTPATH'], 'Fashion-MNIST_WGAN-GP')
