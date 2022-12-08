@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 import tensorflow as tf
+from tensorflow.keras import layers
 
 class ModelInterface(ABC):
     
@@ -41,6 +42,35 @@ class AbstractDLModel(ModelInterface,ABC):
     
     def load_model(self, path):
         return tf.keras.models.load_model(path)
+
+
+class CNNAbstractDLModel(AbstractDLModel,ABC):
+    @staticmethod
+    def _create_conv_block(filters, size, batch_norm=True, strides=2, padding='same', **kwargs):
+        initializer = tf.random_normal_initializer(0, 0.02)
+        conv_block = tf.keras.Sequential()
+        conv_block.add(layers.Conv2D(filters, size, strides=strides, padding=padding, kernel_initializer=initializer, **kwargs))
+        if batch_norm:
+            conv_block.add(layers.BatchNormalization())
+        conv_block.add(layers.LeakyReLU())
+        return conv_block
+
+
+class CNNTransposeAbstractDLModel(AbstractDLModel,ABC):
+    @staticmethod
+    def _create_deconv_block(filters, size, dropout=True, strides=2, padding='same', **kwargs):
+        initializer = tf.random_normal_initializer(0, 0.02)
+        deconv_block = tf.keras.Sequential()
+        deconv_block.add(layers.Conv2DTranspose(filters, size, strides=strides, padding=padding, kernel_initializer=initializer, **kwargs))
+        deconv_block.add(layers.BatchNormalization())
+        if dropout:
+            deconv_block.add(layers.Dropout(0.5))
+        deconv_block.add(layers.ReLU())
+        return deconv_block
+
+
+class UNetAbstractDLModel(CNNAbstractDLModel, CNNTransposeAbstractDLModel, ABC):
+    pass
 
 
 class GANPipelineInterface(ABC):
