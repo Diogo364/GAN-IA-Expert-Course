@@ -32,3 +32,10 @@ class WassersteinDiscriminatorLoss(GradientPenaltyLossInterface):
     @gradient_penalty.setter
     def gradient_penalty(self, value):
         self._gradient_penalty = value
+
+class MeanAbsoluteErrorLoss(Loss):
+    def __init__(self):
+        super().__init__()
+
+    def call(self, y_true, y_pred):
+        return tf.reduce_mean(tf.abs(y_true - y_pred))
