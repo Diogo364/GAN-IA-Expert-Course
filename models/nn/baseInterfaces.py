@@ -5,10 +5,6 @@ from tensorflow.keras import layers
 class ModelInterface(ABC):
     
     @abstractmethod
-    def _define_archtecture(self):
-        pass
-    
-    @abstractmethod
     def predict(self, x, **kwargs):
         pass
 
@@ -20,12 +16,10 @@ class ModelInterface(ABC):
     def load_model(self, path):
         pass
 
-
 class AbstractDLModel(ModelInterface,ABC):
-    def __init__(self, optimizer: tf.keras.optimizers.Optimizer, input_shape:tuple, from_path: str=None):
+    def __init__(self, optimizer: tf.keras.optimizers.Optimizer, input_shape:tuple):
         self._optimizer = optimizer
         self._input_shape = input_shape
-        self.model = self.load_model(from_path) if from_path else self._define_archtecture()            
     
     def predict(self, x, **kwargs):
         return self.model(x, **kwargs)
@@ -33,7 +27,7 @@ class AbstractDLModel(ModelInterface,ABC):
     def update_weights(self, tape, loss_value):
         generator_gradient = tape.gradient(loss_value, self.model.trainable_variables)
         self._optimizer.apply_gradients(zip(generator_gradient, self.model.trainable_variables))
-        
+
     def get_input_shape(self):
         return self._input_shape
 
@@ -43,8 +37,21 @@ class AbstractDLModel(ModelInterface,ABC):
     def load_model(self, path):
         return tf.keras.models.load_model(path)
 
+class AbstractSelfArchitectureDLModel(AbstractDLModel,ABC):
+    def __init__(self, optimizer: tf.keras.optimizers.Optimizer, input_shape:tuple, from_path: str=None):
+        super().__init__(optimizer=optimizer, input_shape=input_shape)
+        self.model = self.load_model(from_path) if from_path else self._define_archtecture()            
+    
+    @abstractmethod
+    def _define_archtecture(self):
+        pass
 
-class CNNAbstractDLModel(AbstractDLModel,ABC):
+class CustomArchitectureModel(AbstractDLModel):
+    def __init__(self, model, optimizer: tf.keras.optimizers.Optimizer, input_shape:tuple, from_path: str=None):
+        super().__init__(optimizer=optimizer, input_shape=input_shape)
+        self.model = self.load_model(from_path) if from_path else model
+
+class CNNAbstractDLModel(AbstractSelfArchitectureDLModel,ABC):
     @staticmethod
     def _create_conv_block(filters, size, batch_norm=True, strides=2, padding='same', **kwargs):
         initializer = tf.random_normal_initializer(0, 0.02)
@@ -56,7 +63,7 @@ class CNNAbstractDLModel(AbstractDLModel,ABC):
         return conv_block
 
 
-class CNNTransposeAbstractDLModel(AbstractDLModel,ABC):
+class CNNTransposeAbstractDLModel(AbstractSelfArchitectureDLModel,ABC):
     @staticmethod
     def _create_deconv_block(filters, size, dropout=True, strides=2, padding='same', **kwargs):
         initializer = tf.random_normal_initializer(0, 0.02)

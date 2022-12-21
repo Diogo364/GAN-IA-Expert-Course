@@ -1,8 +1,8 @@
-from .baseInterfaces import AbstractDLModel, CNNAbstractDLModel
+from .baseInterfaces import AbstractSelfArchitectureDLModel, CNNAbstractDLModel
 import tensorflow as tf
 from tensorflow.keras import layers
 
-class DCGANDiscriminator(AbstractDLModel):
+class DCGANDiscriminator(AbstractSelfArchitectureDLModel):
     def __init__(self, optimizer: tf.keras.optimizers.Optimizer, input_shape=(28, 28, 1), from_path=None):
         super().__init__(optimizer, input_shape, from_path)
     
