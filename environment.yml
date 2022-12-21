@@ -1,8 +1,8 @@
 name: gan
 channels:
+  - defaults
   - conda-forge
   - anaconda
-  - defaults
 dependencies:
   - _libgcc_mutex=0.1=main
   - _openmp_mutex=5.1=1_gnu
@@ -84,7 +84,6 @@ dependencies:
   - libbrotlicommon=1.0.9=h5eee18b_7
   - libbrotlidec=1.0.9=h5eee18b_7
   - libbrotlienc=1.0.9=h5eee18b_7
-  - libclang=10.0.1=default_hb85057a_2
   - libdeflate=1.8=h7f8727e_5
   - libedit=3.1.20210910=h7f8727e_0
   - libevent=2.1.12=h8f2d780_0
@@ -171,7 +170,6 @@ dependencies:
   - rsa=4.7.2=pyhd3eb1b0_1
   - scipy=1.9.3=py39h14f4228_0
   - seaborn=0.12.0=py39h06a4308_0
-  - setuptools=65.5.0=py39h06a4308_0
   - sip=6.6.2=py39h6a678d5_0
   - six=1.16.0=pyhd3eb1b0_1
   - sqlite=3.39.3=h5082296_0
@@ -179,10 +177,7 @@ dependencies:
   - tensorboard=2.9.0=py39h06a4308_0
   - tensorboard-data-server=0.6.0=py39hca6d32c_0
   - tensorboard-plugin-wit=1.8.1=py39h06a4308_0
-  - tensorflow=2.4.1=gpu_py39h8236f22_0
-  - tensorflow-base=2.4.1=gpu_py39h29c2da4_0
   - tensorflow-datasets=1.2.0=py39h06a4308_0
-  - tensorflow-estimator=2.6.0=pyh7b7c402_0
   - tensorflow-gpu=2.4.1=h30adc30_0
   - tensorflow-metadata=0.14.0=pyhe6710b0_1
   - termcolor=1.1.0=py39h06a4308_1
@@ -192,7 +187,6 @@ dependencies:
   - tqdm=4.64.1=py39h06a4308_0
   - traitlets=5.5.0=pyhd8ed1ab_0
   - typing_extensions=4.4.0=pyha770c72_0
-  - tzdata=2022f=h04d1e81_0
   - urllib3=1.26.12=py39h06a4308_0
   - wcwidth=0.2.5=pyh9f0ad1d_2
   - werkzeug=2.0.3=pyhd3eb1b0_0
@@ -206,6 +200,36 @@ dependencies:
   - zlib=1.2.13=h5eee18b_0
   - zstd=1.5.2=ha4553b6_0
   - pip:
-    - gast==0.3.3
-    - python-dotenv==0.21.0
-prefix: /home/diogo/anaconda3/envs/gan
+      - altair==4.2.0
+      - commonmark==0.9.1
+      - gast==0.3.3
+      - gitdb==4.0.9
+      - gitpython==3.1.29
+      - jinja2==3.1.2
+      - joblib==1.2.0
+      - keras==2.7.0
+      - libclang==14.0.6
+      - markupsafe==2.1.1
+      - opencv-python==4.6.0.66
+      - pyarrow==10.0.0
+      - pydeck==0.8.0
+      - pympler==1.0.1
+      - python-dotenv==0.21.0
+      - pytz-deprecation-shim==0.1.0.post0
+      - rich==12.6.0
+      - scikit-learn==1.1.3
+      - semver==2.13.0
+      - setuptools==65.5.0
+      - smmap==5.0.0
+      - streamlit==1.14.0
+      - tensorflow==2.7.2
+      - tensorflow-estimator==2.7.0
+      - tensorflow-examples==6ae97eaf3dbd607ed3eccf18f7dc05d7a3b677e3-
+      - tensorflow-io-gcs-filesystem==0.29.0
+      - threadpoolctl==3.1.0
+      - toolz==0.12.0
+      - tzdata==2022.6
+      - tzlocal==4.2
+      - validators==0.20.0
+      - watchdog==2.1.9
+prefix: /home/indtusuario/anaconda3/envs/gan
