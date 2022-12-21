@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from utils import remove_extension_names
 import os.path as osp
 import tensorflow as tf
+import tensorflow_datasets as tfds
 
 class DataLoaderInterface(ABC):
     @abstractmethod
@@ -54,3 +55,27 @@ class MapsURLDataLoader(AbstractURLDataLoader):
         train_images =  train_files.map(self._separate_original_target, num_parallel_calls=tf.data.AUTOTUNE)
         test_images =  test_files.map(self._separate_original_target, num_parallel_calls=tf.data.AUTOTUNE)
         return (train_images, test_images)
+
+class ApplesNOrangesDataLoader():
+    def __init__(self, image_shape=(256, 256, 3)):
+        self._image_shape = image_shape
+        
+    
+    @staticmethod
+    def _get_image_from_dataset_with_label(image, label):
+        return image
+
+    def _reshape_tensor(self, x, y):
+        return tf.reshape(x, self._image_shape), tf.reshape(y, self._image_shape)
+
+    def load_data(self):
+        dataset = tfds.load('cycle_gan/apple2orange', with_info=False, as_supervised=True)
+        train_A, train_B = dataset['trainA'], dataset['trainB']
+        test_A, test_B = dataset['testA'], dataset['testB']
+        
+        train_A, train_B = train_A.map(self._get_image_from_dataset_with_label), train_B.map(self._get_image_from_dataset_with_label)
+        test_A, test_B = test_A.map(self._get_image_from_dataset_with_label), test_B.map(self._get_image_from_dataset_with_label)
+
+        train = tf.data.Dataset.zip((train_A, train_B)).map(self._reshape_tensor)
+        test = tf.data.Dataset.zip((test_A, test_B)).map(self._reshape_tensor)
+        return train, test
