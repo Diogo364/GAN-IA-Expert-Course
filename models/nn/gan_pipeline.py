@@ -160,8 +160,8 @@ class CycleGANPipeline(AbstractGANPipeline):
             total_gen_A2B_loss = gen_A2B_loss + cycle_loss + self._apply_identity_loss(same_B, image_B)
             total_gen_B2A_loss = gen_B2A_loss + cycle_loss + self._apply_identity_loss(same_A, image_A)
             
-            disc_A2B_loss = self._discriminator_loss(expected_output_B, fake_output_B)
-            disc_B2B_loss = self._discriminator_loss(expected_output_A, fake_output_A)
+            disc_A2B_loss = self._apply_discriminator_loss(expected_output_B, fake_output_B)
+            disc_B2B_loss = self._apply_discriminator_loss(expected_output_A, fake_output_A)
         
         self._generator.update_weights(tape, total_gen_A2B_loss)
         self._discriminator.update_weights(tape, disc_A2B_loss)
