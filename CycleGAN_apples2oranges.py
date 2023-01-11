@@ -17,8 +17,8 @@ def get_fruit_data():
     generic_train_preprocessor = GenericPreprocessor(preprocessor_list=[random_crop, random_flip, normalize])
     generic_test_preprocessor = GenericPreprocessor(preprocessor_list=[normalize])
     (train, test) = ApplesNOrangesDataLoader().load_data()
-    train = train.cache().map(generic_train_preprocessor)
-    test = test.cache().map(generic_test_preprocessor)
+    train = train.map(generic_train_preprocessor)
+    test = test.map(generic_test_preprocessor)
     return train, test
 
 if __name__ == '__main__':
@@ -33,14 +33,15 @@ if __name__ == '__main__':
     buffer_size = 995
     random_noise_size = (256,256,3)
     epochs = 10
-    save_artefact_frequency = 5 # each n epochs
+    save_artefact_frequency = 2 # each n epochs
     learning_rate = 0.0002
     beta1, beta2 = 0.5, 0.999
     lambda_ = 10
 
     train, test = get_fruit_data()
     
-    train = train.shuffle(buffer_size).batch(batch_size)
+    train = train.shuffle(buffer_size).batch(batch_size).prefetch(batch_size*2)
+    train_size =  len(list(train))
     test = test.batch(batch_size)
 
     test_images = test.take(test_size)
@@ -84,11 +85,11 @@ if __name__ == '__main__':
                                 lambda_=lambda_)
 
     for epoch in tqdm(range(epochs), leave=True, desc='Training Epoch'):
-        for (train_A, train_B) in tqdm(train, total=len(list(train)), desc='Batches', leave=False):
+        for (train_A, train_B) in tqdm(train, total=train_size//batch_size, desc='Batches', leave=False):
             pipeline.train((train_A, train_B))
         if (epoch == 0) or ((epoch+1) % save_artefact_frequency == 0):
             fig, axes = plt.subplots(4, 4, figsize=(20,20), facecolor='white')
-            for (test_A, test_B), ax in zip(test.take(16), axes.ravel()):
+            for (test_A, test_B), ax in zip(test_images, axes.ravel()):
                 test_A2B = tf.concat([test_A, generator_A2B.predict(test_A)], axis=2)
                 test_B2A = tf.concat([test_B, generator_B2A.predict(test_B)], axis=2)
                 ax.imshow(
@@ -100,6 +101,6 @@ if __name__ == '__main__':
                 ax.axis('off')
             fig.savefig(osp.join(OUTPATH, f'epoch_{epoch+1}_out_grid.png'))
             plt.close(fig)
-
-    pipeline._generator.save_model(osp.join(CycleGAN_ASSETS, 'saved_model_A2B.hdf5'))
-    pipeline._generator_reverse.save_model(osp.join(CycleGAN_ASSETS, 'saved_model_B2A.hdf5'))
+            
+            pipeline._generator.model.save_weigths(osp.join(CycleGAN_ASSETS, 'saved_model_A2B.hd5'))
+            pipeline._generator_reverse.model.save_weigths(osp.join(CycleGAN_ASSETS, 'saved_model_B2A.hd5'))
